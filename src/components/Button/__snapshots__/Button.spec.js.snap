@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button.js should render component and match snapshot 1`] = `
+
+<button type="button"
+        class="pt-button"
+>
+  Default button
+</button>
+
+`;
