@@ -1,28 +1,24 @@
+import { Intentable, Activable } from '@/mixins';
+
 export default {
   data() {
     return {};
   },
-  computed: {
-    classNames() {
-      return ['a', 'b', 'c'];
-    }
-  },
+  mixins: [Intentable, Activable],
   props: {
     size: {
       type: String,
       validator: value => true
-    },
-    type: {
-      type: String,
-      validator: value => true
-    },
-    enabled: {
-
+    }
+  },
+  computed: {
+    classNames() {
+      return ['pt-button'].concat([this.intentClass]).join(' ');
     }
   },
   render() {
     return (
-      <button type="button" class="pt-button">
+      <button class={this.classNames}>
         Default button
       </button>
     );
