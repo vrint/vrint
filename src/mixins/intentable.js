@@ -3,7 +3,6 @@ import { checkWithWarn } from '@/util/output.js'
 export default {
   data() {
     const intentEnum = Object.freeze({
-      default: 'default',
       primary: 'pt-intent-primary',
       danger: 'pt-intent-danger',
       success: 'pt-intent-success',
@@ -17,8 +16,9 @@ export default {
   props: {
     intent: {
       type: String,
-      // TODO: validator need
-      default: 'default'
+      validator: function(val) {
+        return true;
+      }.bind(this)
     }
   },
   computed: {
