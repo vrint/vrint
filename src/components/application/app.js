@@ -3,12 +3,12 @@ import Resize from '../../directives/resize'
 
 export default {
   name: 'vr-app',
-  
+
   directives: { Resize },
 
   data() {
     return {
-      theme: 'dark'
+      theme: 'dark',
     }
   },
 
@@ -16,6 +16,10 @@ export default {
     id: {
       type: String,
       default: 'app'
+    },
+    accessable: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -26,7 +30,7 @@ export default {
 
   render(h) {
     const data = {
-      attrs: { 'data-app': true } ,
+      attrs: { 'data-app': true },
       domProps: { id: this.id },
       staticClass: 'application--wrap',
       directive: [{

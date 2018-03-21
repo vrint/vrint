@@ -6,7 +6,8 @@ export default {
   computed: {
     iconClass() {
       const prefix = 'pt-icon-';
-      return this.iconName ? prefix + this.iconName : undefined;
+      const name = this.iconName ? prefix + this.iconName : '';
+      return name && { [name]: true }
     }
   }
 };

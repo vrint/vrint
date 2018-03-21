@@ -4,5 +4,13 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+
+  computed: {
+    activeClass() {
+      return {
+        'pt-disabled': this.disabled
+      }
+    }
   }
 }
