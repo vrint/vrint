@@ -1,29 +1,19 @@
-import { checkWithWarn } from '@/util/output.js'
-
 export default {
-  data() {
-    const intentEnum = Object.freeze({
-      primary: 'pt-intent-primary',
-      danger: 'pt-intent-danger',
-      success: 'pt-intent-success',
-      warning: 'pt-intent-warning'
-    })
-
-    return {
-      intentEnum
-    }
-  },
   props: {
     intent: {
-      type: String,
-      validator: function(val) {
-        return true;
-      }.bind(this)
+      type: String
     }
   },
   computed: {
     intentClass() {
-      return this.intentEnum[this.intent];
+      const intentEnum = Object.freeze({
+        primary: 'pt-intent-primary',
+        danger: 'pt-intent-danger',
+        success: 'pt-intent-success',
+        warning: 'pt-intent-warning'
+      })
+      let name = this.intentEnum[this.intent];
+      return name && { [name]: true };
     }
   }
 };

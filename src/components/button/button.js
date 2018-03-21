@@ -12,13 +12,31 @@ export default {
 
   mixins: [Intentable, Activable, Sizeable, Iconable, Loadable, Contentable],
 
-  props: {},
+  props: {
+    minimal: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  watch: {
+    loading(val) {
+      this.disabled = val || this.disabled
+    }
+  },
 
   computed: {
     classes() {
-      return Object.assign({
-        'pt-button': true
-      }, this.iconClass);
+      return Object.assign(
+        {
+          'pt-button': true,
+          'pt-minial': this.minimal
+        },
+        this.iconClass,
+        this.sizeClass,
+        this.loaderClass,
+        this.activeClass
+      );
     }
   },
 
@@ -29,13 +47,12 @@ export default {
       class: this.classes
     };
 
-    let loader = this.genLoader();
     let children = this.switchContent(
       this.loading,
       this.$slots.default,
-      loader
+      this.genLoader({ type: 'button' })
     );
 
-    return h('button', data, this.$slots.default, [children]);
+    return h('button', data, [children]);
   }
 };

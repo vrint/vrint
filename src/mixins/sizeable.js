@@ -11,7 +11,8 @@ export default {
         large: 'pt-large',
         fill: 'pt-fill'
       });
-      return { [typeEnum[this.size]]: true };
+      const name = typeEnum[this.size];
+      return name && {[name]: true};
     }
   }
 };

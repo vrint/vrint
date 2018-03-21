@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import 'normalize.css/normalize.css'
-import '@blueprintjs/core/dist/blueprint.css'
+import '../src/styles/blueprint.css'
 
 Vue.config.productionTip = false
 

@@ -14,3 +14,13 @@ export function compact(array) {
   }
   return result;
 }
+
+export function clamp(val, min, max) {
+  if (val == null) {
+    return val;
+  }
+  if (max < min) {
+    throw new Error(`clamp: max cannot be less than min`);
+  }
+  return Math.min(Math.max(val, min), max);
+}
