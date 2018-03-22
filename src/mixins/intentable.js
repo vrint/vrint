@@ -12,8 +12,8 @@ export default {
         success: 'pt-intent-success',
         warning: 'pt-intent-warning'
       })
-      let name = this.intentEnum[this.intent];
-      return name && { [name]: true };
+      let name = intentEnum[this.intent]
+      return name && { [name]: true }
     }
   }
-};
+}

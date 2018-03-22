@@ -1,11 +1,11 @@
-import Vue from 'vue';
-import App from './App';
-import Vrint from 'vrint';
+import Vue from 'vue'
+import App from './App'
+import Vrint from 'vrint'
 
-Vue.config.performance = true;
+Vue.config.performance = true
 
-Vue.use(Vrint);
+Vue.use(Vrint)
 
 new Vue({
   render: h => h(App)
-}).$mount('#app');
+}).$mount('#app')

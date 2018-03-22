@@ -5,7 +5,7 @@ import {
   Iconable,
   Loadable,
   Contentable
-} from '../../mixins';
+} from '../../mixins'
 
 export default {
   name: 'vr-button',
@@ -35,8 +35,9 @@ export default {
         this.iconClass,
         this.sizeClass,
         this.loaderClass,
-        this.activeClass
-      );
+        this.activeClass,
+        this.intentClass
+      )
     }
   },
 
@@ -45,14 +46,14 @@ export default {
   render(h) {
     const data = {
       class: this.classes
-    };
+    }
 
     let children = this.switchContent(
       this.loading,
       this.$slots.default,
-      this.genLoader({ type: 'button' })
-    );
+      this.genLoader({ type: 'button', size: 'small' })
+    )
 
-    return h('button', data, [children]);
+    return h('button', data, [children])
   }
-};
+}
