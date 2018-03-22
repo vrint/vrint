@@ -1,4 +1,8 @@
 export { default as Vrint } from './vrint'
 export { default as VrApplication } from './application'
 export { default as VrButton } from './button'
+export { default as VrButtonGroup } from './buttonGroup'
+export { default as VrDialog } from './dialog'
+export { default as VrOverlay } from './overlay'
+export { default as VrPortal } from './portal'
 export { default as VrSpinner } from './spinner'

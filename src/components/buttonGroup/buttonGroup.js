@@ -1,13 +1,18 @@
-import sizeable from '../../mixins/sizeable';
+import sizeable from '../../mixins/sizeable'
 
 export default {
+  name: 'vr-button-group',
+
   mixins: [sizeable],
 
   computed: {
     classes() {
-      return Object.assign({
-        'pt-button-group': true
-      }, this.sizeClass)
+      return Object.assign(
+        {
+          'pt-button-group': true
+        },
+        this.sizeClass
+      )
     }
   },
 

@@ -9,7 +9,7 @@ export default {
   computed: {
     activeClass() {
       return {
-        'pt-disabled': this.disabled
+        'pt-disabled': this.loading || this.disabled
       }
     }
   }

@@ -2,7 +2,7 @@
 import Resize from '../../directives/resize'
 
 export default {
-  name: 'vr-app',
+  name: 'vr-application',
 
   directives: { Resize },
 

@@ -1,4 +1,4 @@
-import Spinner from '../components/spinner';
+import Spinner from '../components/spinner'
 export default {
   props: {
     loading: {
@@ -10,15 +10,15 @@ export default {
   computed: {
     loaderClass() {
       return {
-        'pt-loading': true
-      };
+        'pt-loading': this.loading
+      }
     }
   },
 
   methods: {
     genLoader(props) {
-      let data = { props };
-      return this.$createElement(Spinner, data);
+      let data = { props }
+      return this.$createElement(Spinner, data)
     }
   }
-};
+}

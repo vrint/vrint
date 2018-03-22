@@ -10,9 +10,9 @@ export default {
         small: 'pt-small',
         large: 'pt-large',
         fill: 'pt-fill'
-      });
-      const name = typeEnum[this.size];
-      return name && {[name]: true};
+      })
+      const name = typeEnum[this.size]
+      return name && { [name]: true }
     }
   }
-};
+}
