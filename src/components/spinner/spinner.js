@@ -35,9 +35,7 @@ export default {
       p2 = this.value ? p1 : p2
       let pathStyle = {
         strokeDasharray: `${PATH_LENGTH} ${PATH_LENGTH}`,
-        strokeDashoffset:
-          PATH_LENGTH -
-          PATH_LENGTH * (this.value == null ? 0.25 : clamp(this.value, 0, 1))
+        strokeDashoffset: PATH_LENGTH - PATH_LENGTH * (this.value == null ? 0.25 : clamp(this.value, 0, 1))
       }
       const svgEle = this.$createElement('svg', { attrs: { viewBox: vb } }, [
         this.$createElement('path', {
@@ -50,11 +48,7 @@ export default {
           style: pathStyle
         })
       ])
-      return this.$createElement(
-        'div',
-        { staticClass: 'pt-spinner-svg-container' },
-        [svgEle]
-      )
+      return this.$createElement('div', { staticClass: 'pt-spinner-svg-container' }, [svgEle])
     }
   },
 

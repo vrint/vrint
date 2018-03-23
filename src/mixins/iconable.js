@@ -1,13 +1,20 @@
+import { VrIcon } from '../components'
+
 export default {
   props: {
-    iconName: {}
+    iconName: String,
+    iconSize: Number
   },
 
-  computed: {
-    iconClass() {
-      const prefix = 'pt-icon-'
-      const name = this.iconName ? prefix + this.iconName : ''
-      return name && { [name]: true }
+  methods: {
+    genIcon() {
+      let data = {
+        props: {
+          iconName: this.iconName,
+          iconSize: this.iconSize
+        }
+      }
+      return this.$createElement(VrIcon, data)
     }
   }
 }
