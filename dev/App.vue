@@ -1,7 +1,8 @@
 <template>
-  <vr-application>
+  <vr-application :accessable="false">
     <ButtonView/>
     <CheckboxView/>
+    <BreadcrumbsView/>
     <vr-icon iconName="calendar" title="calendar"></vr-icon>
     <vr-button-group>
       <vr-button>2</vr-button>
@@ -18,8 +19,9 @@
 <script>
 import ButtonView from './components/button-view'
 import CheckboxView from './components/checkbox-view'
+import BreadcrumbsView from './components/breadcrumbs-view'
 export default {
-  components: { ButtonView, CheckboxView },
+  components: { ButtonView, CheckboxView, BreadcrumbsView },
   data() {
     return {
       msg: 'hello'

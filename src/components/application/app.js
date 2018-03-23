@@ -1,6 +1,6 @@
 // Directives
 import Resize from '../../directives/resize'
-
+import * as Classes from '../../util/classes'
 export default {
   name: 'vr-application',
 
@@ -8,7 +8,7 @@ export default {
 
   data() {
     return {
-      theme: 'dark',
+      theme: 'dark'
     }
   },
 
@@ -24,8 +24,7 @@ export default {
   },
 
   methods: {
-    onResize() {
-    }
+    onResize() {}
   },
 
   render(h) {
@@ -33,10 +32,15 @@ export default {
       attrs: { 'data-app': true },
       domProps: { id: this.id },
       staticClass: 'application--wrap',
-      directive: [{
-        name: 'resize',
-        value: this.onResize
-      }]
+      class: {
+        'pt-focus-disabled': !this.accessable
+      },
+      directive: [
+        {
+          name: 'resize',
+          value: this.onResize
+        }
+      ]
     }
 
     return h('main', data, this.$slots.default)
