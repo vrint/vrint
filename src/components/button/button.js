@@ -1,22 +1,18 @@
-import {
-  Intentable,
-  Activable,
-  Sizeable,
-  Iconable,
-  Loadable,
-  Contentable
-} from '../../mixins'
+import * as Classes from '../../util/classes'
+
+import { Intentable, Activable, Sizeable, Iconable, Loadable } from '../../mixins'
 
 export default {
   name: 'vr-button',
 
-  mixins: [Intentable, Activable, Sizeable, Iconable, Loadable, Contentable],
+  mixins: [Intentable, Activable, Sizeable, Iconable, Loadable],
 
   props: {
     minimal: {
       type: Boolean,
       default: false
-    }
+    },
+    text: String
   },
 
   watch: {
@@ -29,10 +25,9 @@ export default {
     classes() {
       return Object.assign(
         {
-          'pt-button': true,
-          'pt-minial': this.minimal
+          [Classes.BUTTON]: true,
+          [Classes.MINIMAL]: this.minimal
         },
-        this.iconClass,
         this.sizeClass,
         this.loaderClass,
         this.activeClass,
@@ -48,12 +43,17 @@ export default {
       class: this.classes
     }
 
-    let children = this.switchContent(
-      this.loading,
-      this.$slots.default,
-      this.genLoader({ type: 'button', size: 'small' })
-    )
+    let children = []
+    if (this.loading) {
+      children.push(this.genLoader({ type: 'button', size: 'small' }))
+    }
 
-    return h('button', data, [children])
+    if (this.iconName) {
+      children.push(this.genIcon())
+    }
+
+    let text = this.text ? this.text : this.$slots.default
+    children.push(h('span', { staticClass: Classes.BUTTON_TEXT }, text))
+    return h('button', data, children)
   }
 }
