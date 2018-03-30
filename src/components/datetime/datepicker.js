@@ -7,15 +7,32 @@ export default {
   methods: {
     genContainer(children) {
       let h = this.$createElement
-      const wrapper = h('div', { domProps: { tabindex: -1 } }, children)
-      return h('div', { staticClass: 'pt-datepicker' }, [wrapper])
+      const wrapper = h(
+        'div',
+        {
+          attrs: { tabindex: '-1' },
+          staticClass: 'DayPicker-wrapper'
+        },
+        children
+      )
+      return h(
+        'div',
+        {
+          staticClass: 'pt-datepicker'
+        },
+        [wrapper]
+      )
     },
     genIndictor(label, classNames, clickHandler) {
       let h = this.$createElement
-      let staticClass = `DayPicker-NavButton 'DayPicker-NavButton--${classNames}`
+      let staticClass = `DayPicker-NavButton DayPicker-NavButton--${classNames}`
       return h('span', {
         staticClass,
-        domProps: { 'aria-label': label, tabindex: 0, role: 'button' },
+        attrs: {
+          'aria-label': label,
+          tabindex: '0',
+          role: 'button'
+        },
         on: {
           click: clickHandler
         }
@@ -34,23 +51,38 @@ export default {
       let options = []
       for (let i = 0; i < optionList.length; i++) {
         let { label, value } = optionList[i]
-        options.push(h('option', { domProps: { value: i } }, optionList[i]))
+        options.push(h('option', { domProps: { value: i } }, label))
       }
-      let select = h('select', { staticClass: `pt-datepicker-${type}-select` }, options)
+      let select = h(
+        'select',
+        {
+          staticClass: `pt-datepicker-${type}-select`
+        },
+        options
+      )
       let caretIcon = h(VrIcon, {
         props: { iconName: 'caret-down' },
         staticClass: 'pt-datepicker-caption-caret'
       })
-      return h('div', { staticClass: 'pt-datepicker-caption-select' }, [select, caretIcon])
+      return h(
+        'div',
+        {
+          staticClass: 'pt-datepicker-caption-select'
+        },
+        [select, caretIcon]
+      )
     },
     genWeekDayCaption() {
       let h = this.$createElement
       let monthOptions = [{ label: 'Jan', value: '0' }]
       let yearOptions = [{ label: '2018', value: '2018' }]
-      return h('div', { staticClass: 'pt-datepicker-caption' }, [
-        this.genCaptionSelect('year', yearOptions),
-        this.genCaptionSelect('month', monthOptions)
-      ])
+      return h(
+        'div',
+        {
+          staticClass: 'pt-datepicker-caption'
+        },
+        [this.genCaptionSelect('month', monthOptions), this.genCaptionSelect('year', yearOptions)]
+      )
     },
     genWeekDayRow() {
       let h = this.$createElement
@@ -65,15 +97,21 @@ export default {
         { short: 'Sa', full: 'Saturday' }
       ]
       for (let i = 0; i < weekdays.length; i++) {
-        let { short, full } = weekdays[i]
-        let abbr = h('abbr', { domProps: { title: full } }, short)
+        let { short, full: title } = weekdays[i]
+        let abbr = h(
+          'abbr',
+          {
+            domProps: { title }
+          },
+          short
+        )
         let cell = h(
           'div',
           {
             staticClass: 'DayPicker-Weekday',
-            domProps: { role: 'columnheader' }
+            attrs: { role: 'columnheader' }
           },
-          abbr
+          [abbr]
         )
         headerCells.push(cell)
       }
@@ -85,7 +123,7 @@ export default {
       return h(
         'div',
         { staticClass: 'DayPicker-Weekdays', domProps: { role: 'rowgroup' } },
-        weekdayRow
+        [weekdayRow]
       )
     },
     genDayRow() {},
@@ -94,9 +132,6 @@ export default {
   },
 
   render(h) {
-    return this.genContainer([
-      this.genNavbar(),
-      this.genWeekDayCaption()
-    ])
+    return this.genContainer([this.genNavbar(), this.genWeekDayCaption(), this.genWeekDayRow()])
   }
 }

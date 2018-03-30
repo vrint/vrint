@@ -1,8 +1,7 @@
 export default {
   props: {
-    size: {
-      type: String
-    }
+    size: String,
+    minimal: Boolean
   },
   computed: {
     sizeClass() {
