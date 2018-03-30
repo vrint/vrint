@@ -36,11 +36,18 @@ export default {
     }
   },
 
-  methods: {},
+  methods: {
+    clickHandler(e) {
+      this.$emit('click', e)
+    }
+  },
 
   render(h) {
     const data = {
-      class: this.classes
+      class: this.classes,
+      on: {
+        click: this.clickHandler
+      }
     }
 
     let children = []
