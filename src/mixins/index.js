@@ -1,4 +1,5 @@
 export { default as Activable } from './activable'
+export { default as Roundable } from './roundable'
 export { default as Iconable } from './iconable'
 export { default as Titleable } from './titleable'
 export { default as Intentable } from './intentable'
