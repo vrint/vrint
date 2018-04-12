@@ -4,7 +4,7 @@ import { clamp } from '../../util/helper'
 export default {
   name: 'vr-spinner',
 
-  mixins: [Intentable, Sizeable],
+  mixins: [Intentable],
 
   computed: {
     classes() {
@@ -18,12 +18,8 @@ export default {
   },
 
   props: {
-    value: {
-      type: Number
-    },
-    type: {
-      type: String
-    }
+    value: Number,
+    type: String
   },
 
   methods: {
@@ -35,7 +31,8 @@ export default {
       p2 = this.value ? p1 : p2
       let pathStyle = {
         strokeDasharray: `${PATH_LENGTH} ${PATH_LENGTH}`,
-        strokeDashoffset: PATH_LENGTH - PATH_LENGTH * (this.value == null ? 0.25 : clamp(this.value, 0, 1))
+        strokeDashoffset:
+          PATH_LENGTH - PATH_LENGTH * (this.value == null ? 0.25 : clamp(this.value, 0, 1))
       }
       const svgEle = this.$createElement('svg', { attrs: { viewBox: vb } }, [
         this.$createElement('path', {

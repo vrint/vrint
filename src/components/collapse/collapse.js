@@ -46,7 +46,6 @@ export default {
         if (state !== AnimationStates.CLOSED && !newValOfIsOpen) {
           this.state = AnimationStates.CLOSING_START
           this.height = `${this.contents.clientHeight}px`
-          console.log(this.height)
         } else if (state !== AnimationStates.OPEN && newValOfIsOpen) {
           this.state = AnimationStates.OPENING
           this.$nextTick(e => {
@@ -97,7 +96,6 @@ export default {
 
   render(h) {
     let { AnimationStates, state, height } = this
-    console.log({ height })
     let { wrapperTag, keepChildrenMounted, isOpen } = this
     // state === AnimationStates.CLOSING_START
     const isContentInit = height !== 0

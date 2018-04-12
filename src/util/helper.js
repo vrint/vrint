@@ -24,3 +24,23 @@ export function clamp(val, min, max) {
   }
   return Math.min(Math.max(val, min), max)
 }
+
+export function safeInvoke(func, ...args) {
+  const isFunction = typeof func === 'function'
+  if (isFunction) {
+    return func(...args)
+  }
+}
+
+export function classNames(...args) {
+  let str = ''
+  for (let name of args) {
+    if (typeof name === 'string') {
+      str += name + ' '
+    } else if (typeof name === 'object') {
+      let keys = Object.keys(name)
+      str += keys.filter(i => name[i]).join(' ') + ' '
+    }
+  }
+  return str.slice(0, -1)
+}

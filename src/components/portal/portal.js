@@ -1,58 +1,46 @@
+import * as Classes from '../../util/classes'
+import { safeInvoke } from '../../util/helper'
+
 export default {
   name: 'vr-portal',
 
-  data() {
-    return {
-      portalElement: null,
-      hasMounted: false
-    }
-  },
-
   props: {
-    className: {
-      type: String,
-      default: ''
-    },
     onChildrenMount: {
       type: Function,
       default: () => {}
-    },
-    children: {
-      type: Array,
-      default: []
     }
   },
 
-  watch: {
-    className(newclassName, oldclassName) {
-      if (this.portalElement !== null) {
-        this.portalElement.classList.remove(oldclassName)
-        this.portalElement.classList.add(newclassName)
-      }
-    }
+  destroy() {
+    const { portalElement } = this.$refs
+    portalElement && portalElement.remove()
   },
 
   mounted() {
-    this.portalElement = this.createContainerElement()
-    document.body.appendChild(this.portalElement)
-    this.props.onChildrenMount()
-    this.hasMounted = true
-  },
+    const { portalElement } = this.$refs
+    const parent = this.$root.$el
+    parent.append(portalElement)
 
-  methods: {
-    createContainerElement() {
-      let containerElement = this.$createElement('div')
-      containerElement.classList.add('pt-portal')
-      // TODO: add props className
-      return containerElement
-    }
+    this.$forceUpdate()
+    this.$nextTick(e => safeInvoke(this.onChildrenMount, this.$slots.default))
   },
 
   render(h) {
-    if (typeof document === 'undefined' || !this.state.hasMounted) {
+    const { hasMounted } = this
+    const { portalElement } = this.$refs
+    const data = {
+      attrs: {
+        role: 'portal'
+      },
+      style: {
+        display: portalElement ? undefined : 'none'
+      },
+      ref: 'portalElement'
+    }
+    if (typeof document === 'undefined') {
       return null
     } else {
-      return h(this.portalElement, this.children)
+      return h('div', data, this.$slots.default)
     }
   }
 }
