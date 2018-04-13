@@ -44,3 +44,23 @@ export function classNames(...args) {
   }
   return str.slice(0, -1)
 }
+
+export function createFunctionalComponent(option) {
+  return {
+    name: option.name,
+    functional: true,
+    mixins: option.mixins,
+    props: option.props,
+    render(h, context) {
+      const {
+        class: dynamicClass,
+        staticClass,
+        staticStyle = {},
+        style: dynamicStyle = {}
+      } = context.props
+      const classesSetOnTemplate = classNames(dynamicClass, staticClass)
+      const stylesSetOnTemplate = Object.assign(staticStyle, dynamicStyle)
+      return option.render(h, context, classesSetOnTemplate, stylesSetOnTemplate)
+    }
+  }
+}

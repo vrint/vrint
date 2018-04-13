@@ -11,7 +11,8 @@ export default {
       let data = {
         props: {
           iconName: iconName || this.iconName,
-          iconSize: iconSize || this.iconSize
+          iconSize: iconSize || this.iconSize,
+          intent: this.intent
         }
       }
       return this.$createElement(VrIcon, data)

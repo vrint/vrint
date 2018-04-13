@@ -165,7 +165,7 @@ export default {
     },
 
     handleDocumentClick(e) {
-      const { canOutsideClickClose, isOpen, onClose } = this.props
+      const { canOutsideClickClose, isOpen, onClose } = this
       const eventTarget = e.target
 
       const { overlayOpenStack = [] } = this.$root

@@ -20,7 +20,8 @@ export default {
     },
     title: String,
     className: String,
-    onClose: Function
+    onClose: Function,
+    footerClassName: String
   },
 
   methods: {
@@ -39,13 +40,18 @@ export default {
             className: Classes.DIALOG_CONTAINER
           }
         },
-        [h('div', { staticClass: Classes.DIALOG }, children)]
+        [h('div', { staticClass: classNames(Classes.DIALOG, this.className) }, children)]
       )
     },
 
     renderBody(children) {
-      const h = this.$createElement
-      return h('div', { class: classNames(Classes.DIALOG_BODY, this.className) }, children)
+      const bodySlot = this.$slots.body
+      if (bodySlot) {
+        return bodySlot
+      } else {
+        const h = this.$createElement
+        return h('div', { class: Classes.DIALOG_BODY }, children)
+      }
     },
 
     genTitle() {
@@ -95,11 +101,18 @@ export default {
 
     maybeRenderFooter() {
       const h = this.$createElement
-      const footerActionSlot = this.$slots.footer
-      const footerAction = h('div', { staticClass: Classes.DIALOG_FOOTER_ACTIONS }, [
-        footerActionSlot
-      ])
-      return h('div', { staticClass: Classes.DIALOG_FOOTER }, [footerAction])
+      const { footerClassName: staticClass } = this
+      const footerNode = this.$slots.footer
+      if (!footerNode) {
+        return null
+      }
+
+      if (staticClass) {
+        return h('div', { staticClass }, footerNode)
+      } else {
+        const footerAction = h('div', { staticClass: Classes.DIALOG_FOOTER_ACTIONS }, [footerNode])
+        return h('div', { staticClass: Classes.DIALOG_FOOTER }, [footerAction])
+      }
     },
 
     handleContainerMouseDown(e) {
