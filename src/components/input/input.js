@@ -1,4 +1,5 @@
 import * as Classes from '../../util/classes'
+import { classNames } from '../../util/helper'
 import { Sizeable, Intentable, Activable, Roundable, Iconable } from '../../mixins'
 export default {
   name: 'vr-input',
@@ -21,47 +22,36 @@ export default {
 
       this.$emit('input', el.value)
       this.$emit(ev.type, el.value, ev.srcElement)
+    },
+
+    genInputElement() {
+      const type = 'text'
+      const autocomplete = 'off'
+      const { dir, placeholder } = this
+      const value = this.value
+      return this.$createElement('input', {
+        domProps: { value },
+        attrs: { type, autocomplete, dir, placeholder },
+        staticClass: classNames(
+          Classes.INPUT,
+          this.intentClass,
+          this.sizeClass,
+          this.activeClass,
+          this.roundClass
+        ),
+        on: {
+          change: this.inputChangeHandler,
+          input: this.inputChangeHandler
+        }
+      })
     }
   },
 
   render(h) {
-    const classes = Object.assign(
-      {},
-      this.intentClass,
-      this.sizeClass,
-      this.activeClass,
-      this.roundClass
-    )
+    const input = this.genInputElement()
+    if (!this.iconName) return input
 
-    let input = h('input', {
-      staticClass: Classes.INPUT,
-      class: classes,
-      attrs: {
-        type: 'text',
-        autocomplete: 'off',
-        placeholder: this.placeholder,
-        dir: this.dir
-      },
-      domProps: {
-        value: this.value
-      },
-      on: {
-        change: this.inputChangeHandler,
-        input: this.inputChangeHandler
-      }
-    })
-
-    if (this.iconName) {
-      const icon = this.genIcon()
-      return h(
-        'div',
-        {
-          staticClass: Classes.INPUT_GROUP
-        },
-        [icon, input]
-      )
-    } else {
-      return input
-    }
+    const icon = this.genIcon()
+    return h('div', { staticClass: Classes.INPUT_GROUP }, [icon, input])
   }
 }

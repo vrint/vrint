@@ -1,7 +1,7 @@
 import VrCard from './card'
 
 /* istanbul ignore next */
-VrCard.install = function install (Vue) {
+VrCard.install = function install(Vue) {
   Vue.component(VrCard.name, VrCard)
 }
 

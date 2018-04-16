@@ -1,13 +1,32 @@
 <template>
   <section>
     <h4>Checkbox</h4>
-    <vr-checkbox>label</vr-checkbox>
+    checked: {{ checked }}
+    indeterminate: {{ indeterminate }}
+    <br/>
+    <vr-checkbox :checked="checked" inline @change="onChanged">First <small>(inline)</small></vr-checkbox>
+    <vr-checkbox :checked="checked" inline @change="onChanged">Second <small>(inline)</small></vr-checkbox>
+    <vr-checkbox :indeterminate="indeterminate" inline>Third <small>(inline)</small></vr-checkbox>
+    <vr-checkbox :disabled="checked">disabled</vr-checkbox>
+    <vr-checkbox :disabled="checked">disabled</vr-checkbox>
+    <vr-checkbox size="large">large checkbox</vr-checkbox>
   </section>
 </template>
 
 <script>
 export default {
-
+  data() {
+    return {
+      checked: false,
+      indeterminate: true
+    }
+  },
+  methods: {
+    onChanged(val) {
+      this.checked = val.checked
+      this.indeterminate = !val.checked
+    }
+  }
 }
 </script>
 

@@ -10,11 +10,12 @@ export default createFunctionalComponent({
   render(h, context, classesSetOnTemplate, style) {
     const { children, props, data } = context
     const { interactive, elevation } = props
+    const isValidEva = (elevation <= 4) & (elevation >= 0)
     const staticClass = classNames(
       {
-        'pt-card': true,
+        [Classes.CARD]: true,
         [Classes.INTERACTIVE]: interactive,
-        [Classes[`ELEVATION_${elevation}`]]: !isNaN(Number(elevation))
+        [Classes[`ELEVATION_${elevation}`]]: isValidEva
       },
       classesSetOnTemplate
     )

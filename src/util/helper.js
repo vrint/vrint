@@ -45,6 +45,11 @@ export function classNames(...args) {
   return str.slice(0, -1)
 }
 
+// createTemplateWithName(h, 'body', [])
+export function createTemplateWithName(h, slot, children) {
+  return h('template', { slot }, children)
+}
+
 export function createFunctionalComponent(option) {
   return {
     name: option.name,

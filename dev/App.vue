@@ -2,6 +2,7 @@
   <vr-application :accessable="false">
     <ButtonView/>
     <CheckboxView/>
+    <RadioView/>
     <BreadcrumbsView/>
     <CollapseView/>
     <!-- <DatetimeView/> -->
@@ -35,13 +36,14 @@
 <script>
 import ButtonView from './components/button-view'
 import CheckboxView from './components/checkbox-view'
+import RadioView from './components/radio-view'
 import BreadcrumbsView from './components/breadcrumbs-view'
 import CollapseView from './components/collapse-view'
 import InputView from './components/input-view'
 import Test from './test'
 
 export default {
-  components: { ButtonView, CheckboxView, BreadcrumbsView, CollapseView, InputView, Test },
+  components: { ButtonView, CheckboxView, RadioView, BreadcrumbsView, CollapseView, InputView, Test },
   data() {
     return {
       isOpen: false

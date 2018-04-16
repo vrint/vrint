@@ -1,30 +1,37 @@
 import * as Classes from '../../util/classes'
 import { classNames } from '../../util/helper'
 import { Activable, Controlable, Intentable, Sizeable } from '../../mixins'
+import input from '../input/input'
 
 export default {
-  name: 'vr-checkbox',
+  name: 'vr-radio',
+
+  model: {
+    prop: 'inputValue',
+    event: 'change'
+  },
 
   props: {
-    inline: Boolean,
-    indeterminate: Boolean,
-    checked: Boolean
+    label: String,
+    name: String,
+    inputValue: String,
+    value: String,
+    inline: Boolean
   },
 
   mixins: [Activable, Controlable, Intentable, Sizeable],
 
   methods: {
     genInputElement() {
-      const type = 'checkbox'
-      const checked = this.checked
-      const indeterminate = !this.checked && this.indeterminate
-      const disabled = this.disabled
+      const type = 'radio'
+      const { inputValue, disabled, value, name } = this
+      const checked = this.value === inputValue
 
       return this.$createElement('input', {
         attrs: { type },
         on: { change: this.inputChangeHandler },
-        domProps: { checked, indeterminate, disabled },
-        ref: 'checkbox'
+        domProps: { checked, disabled, value, name },
+        ref: 'radio'
       })
     },
 
@@ -33,17 +40,16 @@ export default {
     },
 
     inputChangeHandler(el) {
-      const inputRef = this.$refs.checkbox
-      const checked = inputRef.checked
-      const indeterminate = inputRef.indeterminate
-      this.$emit('change', { checked, indeterminate, el })
+      const inputRef = this.$refs.radio
+      this.$emit('change', inputRef.value)
+      this.$parent.onChanged(inputRef.value)
     }
   },
 
   render(h) {
     const textNode = this.$slots.default || this.label
     const staticClass = classNames(
-      Classes.CHECKBOX,
+      Classes.RADIO,
       {
         [Classes.CONTROL]: true,
         [Classes.INLINE]: this.inline
