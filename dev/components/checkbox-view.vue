@@ -4,8 +4,8 @@
     checked: {{ checked }}
     indeterminate: {{ indeterminate }}
     <br/>
-    <vr-checkbox :checked="checked" inline @change="onChanged">First <small>(inline)</small></vr-checkbox>
-    <vr-checkbox :checked="checked" inline @change="onChanged">Second <small>(inline)</small></vr-checkbox>
+    <vr-checkbox v-model="checked" inline @change="onChanged">First <small>(inline)</small></vr-checkbox>
+    <vr-checkbox v-model="checked" inline @change="onChanged">Second <small>(inline)</small></vr-checkbox>
     <vr-checkbox :indeterminate="indeterminate" inline>Third <small>(inline)</small></vr-checkbox>
     <vr-checkbox :disabled="checked">disabled</vr-checkbox>
     <vr-checkbox :disabled="checked">disabled</vr-checkbox>
@@ -23,8 +23,7 @@ export default {
   },
   methods: {
     onChanged(val) {
-      this.checked = val.checked
-      this.indeterminate = !val.checked
+      console.log(val)
     }
   }
 }

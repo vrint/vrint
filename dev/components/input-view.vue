@@ -7,7 +7,15 @@
     <vr-input v-model="message" intent="success" placeholder="placeholder"></vr-input>
     <vr-input v-model="message" size="fill" placeholder="placeholder"></vr-input>
 
-    <vr-select v-model="message" :options="options" placeholder="placeholder"></vr-select>
+    <vr-dropdown v-model="message" :options="options" placeholder="please choose one"></vr-dropdown>
+    <vr-dropdown v-model="message" :options="groupOptions"></vr-dropdown>
+
+    <vr-textarea 
+      placeholder="Less than 100 words"
+      :maxlength="100"
+      :rows="5" size="fill" @change="eventHandle" @blur="eventHandle">
+
+    </vr-textarea>
   </section>
 </template>
 
@@ -15,11 +23,19 @@
 export default {
   data() {
     return {
-      message: '2',
-      options: [
-        {value: '1', label: 'hello'},
-        {value: '2', label: 'hello2'}
+      message: '',
+      options: [{ value: '1', label: 'hello' }, { value: '2', label: 'hello2' }],
+      groupOptions: [
+        {
+          label: 'group 1',
+          options: [{ value: '1', label: 'hello' }, { value: '2', label: 'hello2' }]
+        }
       ]
+    }
+  },
+  methods: {
+    eventHandle(ev) {
+      console.log(ev)
     }
   }
 }

@@ -3,6 +3,7 @@
     <ButtonView/>
     <CheckboxView/>
     <RadioView/>
+    <SwitchView/>
     <BreadcrumbsView/>
     <CollapseView/>
     <!-- <DatetimeView/> -->
@@ -37,13 +38,23 @@
 import ButtonView from './components/button-view'
 import CheckboxView from './components/checkbox-view'
 import RadioView from './components/radio-view'
+import SwitchView from './components/switch-view'
 import BreadcrumbsView from './components/breadcrumbs-view'
 import CollapseView from './components/collapse-view'
 import InputView from './components/input-view'
 import Test from './test'
 
 export default {
-  components: { ButtonView, CheckboxView, RadioView, BreadcrumbsView, CollapseView, InputView, Test },
+  components: {
+    ButtonView,
+    CheckboxView,
+    RadioView,
+    BreadcrumbsView,
+    CollapseView,
+    InputView,
+    SwitchView,
+    Test
+  },
   data() {
     return {
       isOpen: false

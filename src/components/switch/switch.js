@@ -3,18 +3,11 @@ import { classNames } from '../../util/helper'
 import { Activable, Intentable, Sizeable } from '../../mixins'
 
 export default {
-  name: 'vr-checkbox',
-
-  model: {
-    prop: 'checked',
-    event: 'change'
-  },
+  name: 'vr-switch',
 
   props: {
-    value: String,
-    checked: Boolean,
     inline: Boolean,
-    indeterminate: Boolean
+    checked: Boolean
   },
 
   mixins: [Activable, Intentable, Sizeable],
@@ -22,15 +15,15 @@ export default {
   methods: {
     genInputElement() {
       const type = 'checkbox'
+      const role = 'switch'
       const checked = this.checked
-      const indeterminate = !this.checked && this.indeterminate
       const disabled = this.disabled
 
       return this.$createElement('input', {
-        attrs: { type },
+        attrs: { type, role },
         on: { change: this.inputChangeHandler },
-        domProps: { checked, indeterminate, disabled },
-        ref: 'checkbox'
+        domProps: { checked, disabled },
+        ref: 'switch'
       })
     },
 
@@ -39,16 +32,16 @@ export default {
     },
 
     inputChangeHandler(el) {
-      const inputRef = this.$refs.checkbox
+      const inputRef = this.$refs.switch
       const checked = inputRef.checked
-      this.$emit('change', checked)
+      this.$emit('change', { checked, el })
     }
   },
 
   render(h) {
     const textNode = this.$slots.default || this.label
     const staticClass = classNames(
-      Classes.CHECKBOX,
+      Classes.SWITCH,
       {
         [Classes.CONTROL]: true,
         [Classes.INLINE]: this.inline
