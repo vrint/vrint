@@ -120,7 +120,6 @@ export default {
     },
 
     handleBackdropMouseDown(e) {
-      console.log(e)
       const { canOutsideClickClose, enforceFocus, onClose } = this
       if (canOutsideClickClose) {
         safeInvoke(this.onClose, e)

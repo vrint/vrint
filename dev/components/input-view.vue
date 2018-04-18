@@ -7,7 +7,7 @@
     <vr-input v-model="message" intent="success" placeholder="placeholder"></vr-input>
     <vr-input v-model="message" size="fill" placeholder="placeholder"></vr-input>
 
-    <vr-dropdown v-model="message" :options="options" placeholder="please choose one"></vr-dropdown>
+    <vr-dropdown v-model="message" :options="options" placeholder="Please choose one ..."></vr-dropdown>
     <vr-dropdown v-model="message" :options="groupOptions"></vr-dropdown>
 
     <vr-textarea 
@@ -41,6 +41,8 @@ export default {
 }
 </script> 
 
-<style>
-
+<style scoped>
+.pt-input {
+  margin: 10px 10px 10px 0;
+}
 </style>
