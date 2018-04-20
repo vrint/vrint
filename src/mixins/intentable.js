@@ -1,19 +1,20 @@
+import INTENT from '../util/intent'
+import { intentClass } from '../util/classes'
+
 export default {
   props: {
     intent: {
-      type: String
-    }
+      type: String,
+      validator: function(val) {
+        return Object.values(INTENT).indexOf(val) !== -1
+      }
+    },
+    minimal: Boolean
   },
   computed: {
     intentClass() {
-      const intentEnum = Object.freeze({
-        primary: 'pt-intent-primary',
-        danger: 'pt-intent-danger',
-        success: 'pt-intent-success',
-        warning: 'pt-intent-warning'
-      })
-      let name = intentEnum[this.intent]
-      return name && { [name]: true }
+      const minimal = this.minimal ? 'pt-minimal' : ''
+      return [intentClass(this.intent), minimal]
     }
   }
 }

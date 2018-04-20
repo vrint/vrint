@@ -1,4 +1,4 @@
-import Portal from '../portal/portal'
+import Portal from '../portal'
 import { Escable, Transitionable } from '../../mixins'
 import { safeInvoke, classNames } from '../../util/helper'
 import * as Classes from '../../util/classes'
@@ -30,6 +30,7 @@ export default {
   },
 
   props: {
+    usePortal: Boolean,
     canOutsideClickClose: {
       type: Boolean,
       default: true
@@ -49,7 +50,8 @@ export default {
     hasBackdrop: {
       type: Boolean,
       default: true
-    }
+    },
+    onPortalChildrenMount: Function
   },
 
   methods: {
@@ -100,7 +102,7 @@ export default {
       if (hasBackdrop && isOpen) {
         const data = {
           props: {
-            name: Classes.OVERLAY,
+            name: this.transition,
             duration: 300,
             ...this.genTransitionClasses()
           }
@@ -125,7 +127,7 @@ export default {
         safeInvoke(this.onClose, e)
       }
       if (enforceFocus) {
-        this.bringFocusInsideOverlay()
+        // this.bringFocusInsideOverlay()
       }
     },
 
@@ -159,7 +161,7 @@ export default {
         // prevent default focus behavior (sometimes auto-scrolls the page)
         e.preventDefault()
         e.stopImmediatePropagation()
-        this.bringFocusInsideOverlay()
+        // this.bringFocusInsideOverlay()
       }
     },
 
@@ -190,7 +192,7 @@ export default {
 
       const { autoFocus, enforceFocus, usePortal, hasBackdrop, canOutsideClickClose } = this
       if (autoFocus) {
-        this.bringFocusInsideOverlay()
+        // this.bringFocusInsideOverlay()
       }
       if (enforceFocus) {
         document.addEventListener('focus', this.handleDocumentFocus, true)
@@ -220,6 +222,7 @@ export default {
         appear: true,
         name: this.transition,
         duration: 300,
+        onChildrenMount: this.onPortalChildrenMount,
         ...this.genTransitionClasses()
       }
     }

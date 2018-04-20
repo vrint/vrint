@@ -11,7 +11,7 @@ const INITIAL_TAGS = ['@jkillian', '@adahiya', '@ggray', '@allorca', '@bdwyer', 
 export default {
   data: () => ({
     tags: INITIAL_TAGS,
-    INTENT: ['normal', 'primary', 'success', 'warning', 'danger']
+    INTENT: ['none', 'primary', 'success', 'warning', 'danger']
   }),
 
   methods: {

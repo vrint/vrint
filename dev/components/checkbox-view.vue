@@ -1,9 +1,6 @@
 <template>
   <section>
     <h4>Checkbox</h4>
-    checked: {{ checked }}
-    indeterminate: {{ indeterminate }}
-    <br/>
     <vr-checkbox v-model="checked" inline @change="onChanged">First <small>(inline)</small></vr-checkbox>
     <vr-checkbox v-model="checked" inline @change="onChanged">Second <small>(inline)</small></vr-checkbox>
     <vr-checkbox :indeterminate="indeterminate" inline>Third <small>(inline)</small></vr-checkbox>

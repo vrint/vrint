@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    button {
+      margin-top: 100px;
+    }
+
+    h4 {
+      border: 1px solid red;
+      margin-left: 10px;
+      padding: 10px;
+    }
+
+    [x-arrow] {
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent red transparent transparent;
+      width: 0px;
+      height: 0px;
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="button">Click</button>
+  <div id="content">
+    <h4>title</h4>
+    <div x-arrow></div>
+  </div>
+  <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+  <script type="text/javascript">
+    const reference = document.querySelector('#button');
+    const popper = document.querySelector('#content');
+    var a;
+    reference.addEventListener('mouseover', function () {
+      console.log(a)
+      if (a) {
+        a.destroy()
+        console.log(1, a)
+        return
+      }
+      a = new Popper(reference, popper, {
+        removeOnDestroy: true,
+        placement: 'right',
+        modifers: {
+          enabled: true,
+          element: document.querySelector('[x-arrow]'),
+        },
+        onCreate: (data) => {
+          console.log(data)
+          // data is an object containing all the informations computed
+          // by Popper.js and used to style the popper and its arrow
+          // The complete description is available in Popper.js documentation
+        },
+        onUpdate: (data) => {
+          console.log(2, data)
+          // same as `onCreate` but called on subsequent updates
+        }
+      });
+    })
+  </script>
+</body>
+
+</html>

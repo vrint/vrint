@@ -1,5 +1,5 @@
 import * as Classes from '../../util/classes'
-
+import { classNames } from '../../util/helper'
 import { Intentable, Activable, Sizeable, Iconable, Loadable } from '../../mixins'
 
 export default {
@@ -8,31 +8,12 @@ export default {
   mixins: [Intentable, Activable, Sizeable, Iconable, Loadable],
 
   props: {
-    minimal: {
-      type: Boolean,
-      default: false
-    },
     text: String
   },
 
   watch: {
     loading(val) {
       this.disabled = val || this.disabled
-    }
-  },
-
-  computed: {
-    classes() {
-      return Object.assign(
-        {
-          [Classes.BUTTON]: true,
-          [Classes.MINIMAL]: this.minimal
-        },
-        this.sizeClass,
-        this.loaderClass,
-        this.activeClass,
-        this.intentClass
-      )
     }
   },
 
@@ -44,7 +25,16 @@ export default {
 
   render(h) {
     const data = {
-      class: this.classes,
+      staticClass: classNames(
+        Classes.BUTTON,
+        this.sizeClass,
+        this.loaderClass,
+        this.activeClass,
+        this.intentClass
+      ),
+      attrs: {
+        type: 'button'
+      },
       on: {
         click: this.clickHandler
       }

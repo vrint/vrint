@@ -33,16 +33,19 @@ export function safeInvoke(func, ...args) {
 }
 
 export function classNames(...args) {
-  let str = ''
-  for (let name of args) {
-    if (typeof name === 'string') {
-      str += name + ' '
-    } else if (typeof name === 'object') {
-      let keys = Object.keys(name)
-      str += keys.filter(i => name[i]).join(' ') + ' '
+  let str = []
+  const SPACER = ' '
+  for (let className of args) {
+    if (typeof className === 'string') {
+      str = str.concat(className.split(SPACER))
+    } else if (className instanceof Array) {
+      str = str.concat(className)
+    } else if (typeof className === 'object') {
+      let keys = Object.keys(className)
+      str = str.concat(keys.map(i => className[i] && i))
     }
   }
-  return str.slice(0, -1)
+  return str.filter(i => i).join(' ')
 }
 
 // createTemplateWithName(h, 'body', [])

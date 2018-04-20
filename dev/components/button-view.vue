@@ -4,6 +4,9 @@
     <vr-button>button</vr-button>
     <vr-button iconName="add">button</vr-button>
     <vr-button iconName="add" :minimal="true">button</vr-button>
+    <vr-button intent="primary">button</vr-button>
+    <vr-button intent="primary" iconName="add">button</vr-button>
+    <vr-button intent="primary" :minimal="true" iconName="add">button</vr-button>
     <vr-button intent="success">button</vr-button>
     <vr-button intent="success" iconName="add">button</vr-button>
     <vr-button intent="success" :minimal="true" iconName="add">button</vr-button>

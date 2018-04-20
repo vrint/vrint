@@ -22,13 +22,14 @@ export default {
     parent.append(portalElement)
 
     this.$forceUpdate()
-    this.$nextTick(e => safeInvoke(this.onChildrenMount, this.$slots.default))
+    this.$nextTick(e => safeInvoke(this.onChildrenMount, portalElement))
   },
 
   render(h) {
     const { hasMounted } = this
     const { portalElement } = this.$refs
     const data = {
+      staticClass: Classes.PORTAL,
       attrs: {
         role: 'portal'
       },
