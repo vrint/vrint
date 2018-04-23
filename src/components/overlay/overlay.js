@@ -1,235 +1,161 @@
 import Portal from '../portal'
 import { Escable, Transitionable } from '../../mixins'
-import { safeInvoke, classNames } from '../../util/helper'
+import { safeInvoke, classNames, safeChildren, extend } from '../../util/helper'
 import * as Classes from '../../util/classes'
+
+export const props = extend({
+  /**
+   * Whether the overlay should acquire application focus when it first opens.
+   */
+  autoFocus: Boolean,
+  /**
+   * Trigger flag of overlay
+   */
+  isOpen: Boolean,
+  /**
+   * If `lazy` set true, overlay will not render children when `isOpen` initialize with false
+   */
+  lazy: Boolean,
+  /**
+   * If `usePortal` set true, children with render inside a custom dom under body instead of root element of overlay
+   */
+  usePortal: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * Whether render the backdrop mask
+   */
+  hasBackdrop: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * Add custom class on spec DOM elment, see the example
+   * <div class="pt-overlay">
+   *    <div class="pt-overlay-backdrop"></div>
+   *    <div class="pt-overlay-content `${contentClassNames}`"></div>
+   * </div>
+   */
+  contentClassNames: String,
+  /**
+   * Add custom class on spec DOM elment, see the example
+   * <div class="pt-overlay `${classNames}`">
+   *    <div class="pt-overlay-backdrop"></div>
+   *    <div class="pt-overlay-content"></div>
+   * </div>
+   */
+  classNames: String,
+  /**
+   * Transiton name enum:
+   */
+  transitionName: {
+    type: String,
+    default: Classes.OVERLAY
+  },
+  /**
+   * A callback that is invoked when user interaction causes the overlay to close, such as
+   * clicking on the overlay or pressing the `esc` key (if enabled).
+   */
+  onClose: Function
+})
 
 export default {
   name: 'vr-overlay',
 
+  props,
+
+  render(h) {
+    const { lazy, hasBackdrop, isOpen, canOutsideClickClose, usePortal } = this
+    const { isPropIsOpenInitSet } = this
+    const { onPortalChildrenMount: onChildrenMount } = this
+    const shouldRenderNothing = lazy && !isPropIsOpenInitSet
+
+    if (shouldRenderNothing) {
+      return null
+    }
+
+    let children = safeChildren(
+      this.createTransition(this.genContentWithSlot(), isOpen, { duration: 300, appear: true })
+    )
+
+    const shouldRenderBackdrop = isOpen && hasBackdrop
+    if (shouldRenderBackdrop) {
+      children.unshift(
+        this.createTransition(this.genBackdrop(), isOpen, { duration: 300, appear: true })
+      )
+    }
+
+    const wrapper = this.genWrapper(children)
+
+    if (usePortal) {
+      return h(Portal, { props: { onChildrenMount } }, safeChildren(wrapper))
+    } else {
+      return wrapper
+    }
+  },
+
   mixins: [Escable, Transitionable],
 
-  computed: {
-    containerElement() {
-      return this.$refs.container
-    },
-    lastOpen() {
-      const { overlayOpenStack = [] } = this.$root
-      const len = overlayOpenStack.length
-      return overlayOpenStack[len - 1]
+  data() {
+    return {
+      isPropIsOpenInitSet: false
     }
   },
 
-  watch: {
-    isOpen(val) {
-      val && this.overlayWillOpen()
-    }
-  },
-
-  mounted() {
-    this.isOpen && this.overlayWillOpen()
-  },
-
-  props: {
-    usePortal: Boolean,
-    canOutsideClickClose: {
-      type: Boolean,
-      default: true
-    },
-    transition: {
-      type: String,
-      default: Classes.OVERLAY
-    },
-    autoFocus: {
-      type: Boolean,
-      default: true
-    },
-    className: String,
-    enforceFocus: Boolean,
-    isOpen: Boolean,
-    onClose: Function,
-    hasBackdrop: {
-      type: Boolean,
-      default: true
-    },
-    onPortalChildrenMount: Function
+  created() {
+    this.isPropIsOpenInitSet = this.isOpen
   },
 
   methods: {
-    genContainer(children) {
-      const h = this.$createElement
-      const { isOpen } = this
-      const data = {
-        class: classNames(Classes.OVERLAY, {
-          [Classes.OVERLAY_OPEN]: isOpen
-        }),
-        on: this.eventOfEscKeyDown(),
-        ref: 'container'
-      }
-      return h('div', data, children)
-    },
-
-    maybeRenderChild(child) {
-      const h = this.$createElement
-
-      if (child === null) {
-        return null
-      }
-      const isChildTextNode = Boolean(!child.tag)
-      const tagName = isChildTextNode ? 'span' : 'div'
-      const decoratedChild = h(
-        tagName,
-        { attrs: { tabIndex: 0 }, class: classNames(this.className, Classes.OVERLAY_CONTENT) },
-        [child]
+    genWrapper(children) {
+      const { isOpen, usePortal } = this
+      const containerClasses = classNames(
+        Classes.OVERLAY,
+        {
+          [Classes.OVERLAY_OPEN]: isOpen,
+          [Classes.OVERLAY_INLINE]: !usePortal
+        },
+        this.classNames
       )
 
-      return h(
+      return this.$createElement('div', { staticClass: containerClasses }, children)
+    },
+
+    genContentWithSlot() {
+      const defaultSlot = this.$slots.default
+      const { OVERLAY_CONTENT } = Classes
+      const { contentClassNames } = this
+
+      const dataOption = {}
+      dataOption.staticClass = classNames(contentClassNames, OVERLAY_CONTENT)
+      dataOption.attrs = { tabindex: 0 }
+      let content = this.$createElement('div', dataOption, defaultSlot)
+      return this.$createElement(
         'transition',
         {
           props: {
-            name: this.transition,
+            name: this.transitionName,
             duration: 300,
-            appear: true,
             ...this.genTransitionClasses()
           }
         },
-        [this.isOpen ? decoratedChild : null]
+        [this.isOpen ? content : null]
       )
     },
 
+    handleBackdropMouseDown() {},
+
     genBackdrop() {
-      const h = this.$createElement
-      const { hasBackdrop, isOpen, canOutsideClickClose } = this
-      if (hasBackdrop && isOpen) {
-        const data = {
-          props: {
-            name: this.transition,
-            duration: 300,
-            ...this.genTransitionClasses()
-          }
-        }
-        window.addEventListener('mousedown', this.handleBackdropMouseDown)
-        return h('transition', data, [
-          h('div', {
-            attrs: {
-              tabindex: canOutsideClickClose ? 0 : null
-            },
-            staticClass: Classes.OVERLAY_BACKDROP
-          })
-        ])
-      } else {
-        return null
-      }
+      const { canOutsideClickClose } = this
+      // window.addEventListener('mousedown', this.handleBackdropMouseDown)
+      const tabindex = canOutsideClickClose ? 0 : null
+      const dataOption = {}
+      dataOption.attrs = { tabindex }
+      dataOption.staticClass = Classes.OVERLAY_BACKDROP
+      return this.$createElement('div', dataOption)
     },
 
-    handleBackdropMouseDown(e) {
-      const { canOutsideClickClose, enforceFocus, onClose } = this
-      if (canOutsideClickClose) {
-        safeInvoke(this.onClose, e)
-      }
-      if (enforceFocus) {
-        // this.bringFocusInsideOverlay()
-      }
-    },
-
-    bringFocusInsideOverlay() {
-      this.$nextTick(e => {
-        const { isOpen } = this
-        if (this.containerElement == null || document.activeElement == null || !this.isOpen) {
-          return
-        }
-
-        const isFocusOutsideModal = !this.containerElement.contains(document.activeElement)
-        if (isFocusOutsideModal) {
-          // element marked autofocus has higher priority than the other clowns
-          const autofocusElement = this.containerElement.querySelector('[autofocus]')
-          const wrapperElement = this.containerElement.querySelector('[tabindex]')
-          if (autofocusElement != null) {
-            autofocusElement.focus()
-          } else if (wrapperElement != null) {
-            wrapperElement.focus()
-          }
-        }
-      })
-    },
-
-    handleDocumentFocus(e) {
-      if (
-        this.enforceFocus &&
-        this.containerElement != null &&
-        !this.containerElement.contains(e.target)
-      ) {
-        // prevent default focus behavior (sometimes auto-scrolls the page)
-        e.preventDefault()
-        e.stopImmediatePropagation()
-        // this.bringFocusInsideOverlay()
-      }
-    },
-
-    handleDocumentClick(e) {
-      const { canOutsideClickClose, isOpen, onClose } = this
-      const eventTarget = e.target
-
-      const { overlayOpenStack = [] } = this.$root
-      const stackIndex = overlayOpenStack.indexOf(this)
-
-      const isClickInThisOverlayOrDescendant = overlayOpenStack
-        .slice(stackIndex)
-        .some(({ containerElement }) => containerElement && containerElement.contains(eventTarget))
-
-      if (isOpen && canOutsideClickClose && !isClickInThisOverlayOrDescendant) {
-        // casting to any because this is a native event
-        safeInvoke(onClose, e)
-      }
-    },
-
-    overlayWillOpen() {
-      const { overlayOpenStack = [] } = this.$root
-      if (overlayOpenStack.length > 0) {
-        document.removeEventListener('focus', this.lastOpen.handleDocumentFocus, true)
-      }
-
-      overlayOpenStack.push(this)
-
-      const { autoFocus, enforceFocus, usePortal, hasBackdrop, canOutsideClickClose } = this
-      if (autoFocus) {
-        // this.bringFocusInsideOverlay()
-      }
-      if (enforceFocus) {
-        document.addEventListener('focus', this.handleDocumentFocus, true)
-      }
-
-      if (canOutsideClickClose && !hasBackdrop) {
-        document.addEventListener('mousedown', this.handleDocumentClick)
-      }
-
-      if (!usePortal) {
-        safeInvoke(this.didOpen)
-      } else if (hasBackdrop) {
-        // add a class to the body to prevent scrolling of content below the overlay
-        document.body.classList.add(Classes.OVERLAY_OPEN)
-      }
-    }
-  },
-
-  render(h) {
-    const { usePortal, isOpen } = this
-    const content = isOpen
-      ? [this.genBackdrop(), this.$slots.default.map(this.maybeRenderChild)]
-      : []
-    const container = this.genContainer(content)
-    const data = {
-      props: {
-        appear: true,
-        name: this.transition,
-        duration: 300,
-        onChildrenMount: this.onPortalChildrenMount,
-        ...this.genTransitionClasses()
-      }
-    }
-    if (usePortal) {
-      return h(Portal, data, [container])
-    } else {
-      return h('transition', data, [container])
-    }
+    onPortalChildrenMount() {}
   }
 }

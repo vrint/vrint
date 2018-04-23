@@ -48,6 +48,18 @@ export function classNames(...args) {
   return str.filter(i => i).join(' ')
 }
 
+export function safeChildren(...args) {
+  let children = []
+  args.forEach(child => {
+    if (child instanceof Array) {
+      children = children.concat(child)
+    } else {
+      children.push(child)
+    }
+  })
+  return children
+}
+
 // createTemplateWithName(h, 'body', [])
 export function createTemplateWithName(h, slot, children) {
   return h('template', { slot }, children)
@@ -71,4 +83,11 @@ export function createFunctionalComponent(option) {
       return option.render(h, context, classesSetOnTemplate, stylesSetOnTemplate)
     }
   }
+}
+
+export function extend(to, from) {
+  for (const key in from) {
+    to[key] = from[key]
+  }
+  return to
 }

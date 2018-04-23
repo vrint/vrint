@@ -12,7 +12,7 @@
       confirmButtonText="Move to Trash"
       :handleConfirm="onClose"
       :handleCancel="onClose">
-        <p>Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later, but it will become private to you.</p>
+        <p>{{ isOpen }} Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later, but it will become private to you.</p>
     </vr-alert>
   </section>
 </template>

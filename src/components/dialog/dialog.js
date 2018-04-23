@@ -31,13 +31,12 @@ export default {
       return h(
         VrOverlay,
         {
-          staticClass: Classes.OVERLAY_SCROLL_CONTAINER,
           props: {
             isOpen,
             onClose,
             canOutsideClickClose,
-            hasBackdrop: true,
-            className: Classes.DIALOG_CONTAINER
+            classNames: Classes.OVERLAY_SCROLL_CONTAINER,
+            contentClassNames: Classes.DIALOG_CONTAINER
           }
         },
         [h('div', { staticClass: classNames(Classes.DIALOG, this.className) }, children)]

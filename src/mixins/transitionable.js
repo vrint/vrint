@@ -5,7 +5,7 @@ export default {
   },
 
   methods: {
-    genTransitionClasses(name = this.transition) {
+    genTransitionClasses(name = this.transitionName) {
       if (!name) return Object.create({})
       return {
         'appear-class': `${name}-appear`,
@@ -18,19 +18,22 @@ export default {
         'leave-active-class': ``,
         'leave-to-class': `${name}-exit-active`
       }
-    }
-  },
+    },
 
-  createTransition(children, name = this.transition) {
-    const h = this.$createElment
-    const { mode, genTransitionClasses } = this
-    return h('transition', {
-      props: {
-        mode,
-        name,
-        ...genTransitionClasses(name)
-      },
-      children
-    })
+    createTransition(child, flag, otherProps, name = this.transitionNamem) {
+      const h = this.$createElement
+      const { genTransitionClasses } = this
+      return h(
+        'transition',
+        {
+          props: {
+            name,
+            ...otherProps,
+            ...genTransitionClasses(name)
+          }
+        },
+        [flag ? child : null]
+      )
+    }
   }
 }

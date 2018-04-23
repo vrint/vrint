@@ -18,11 +18,11 @@ export default {
       return this.$createElement(VrButton, {
         props: {
           text,
-          intent,
-          on: {
-            click: e => {
-              safeInvoke(clickHandler, e)
-            }
+          intent
+        },
+        on: {
+          click: e => {
+            safeInvoke(clickHandler, e)
           }
         }
       })

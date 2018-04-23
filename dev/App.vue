@@ -14,7 +14,7 @@
     <TextareaView/>
     <DropdownView/>
     <TagsView/>
-    <PopoverView/>
+    <!-- <PopoverView/> -->
   </vr-application>
 </template>
 
@@ -50,12 +50,13 @@ export default {
     CalloutView,
     AlertView,
     TagsView,
-    PopoverView,
+    // PopoverView,
     Test
   },
   data() {
     return {
-      isOpen: false,
+      show: false,
+      isOpen: false
     }
   },
   methods: {
@@ -71,5 +72,13 @@ section {
   margin: 20px;
   padding-bottom: 15px;
   border-bottom: 1px solid #ccc;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
