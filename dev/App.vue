@@ -9,6 +9,7 @@
     <CardView/> 
     <CalloutView/> 
     <AlertView/>
+    <DialogView/>
     <!-- <DatetimeView/> -->
     <InputView/>
     <TextareaView/>
@@ -33,6 +34,7 @@ import CalloutView from './components/callout-view'
 import AlertView from './components/alert-view'
 import TagsView from './components/tags-view'
 import PopoverView from './components/popover-view'
+import DialogView from './components/dialog-view'
 import Test from './test'
 
 export default {
@@ -50,6 +52,7 @@ export default {
     CalloutView,
     AlertView,
     TagsView,
+    DialogView,
     // PopoverView,
     Test
   },

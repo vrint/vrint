@@ -1,4 +1,4 @@
-import { Intentable, Iconable, Titleable } from '../../mixins'
+import { Intentable, Iconable } from '../../mixins'
 import { classNames } from '../../util/helper'
 import VrIcon from '../icon'
 import * as Classes from '../../util/classes'
@@ -6,9 +6,13 @@ import * as Classes from '../../util/classes'
 export default {
   name: 'vr-callout',
 
+  props: {
+    title: String
+  },
+
   functional: true,
 
-  mixins: [Intentable, Iconable, Titleable],
+  mixins: [Intentable, Iconable],
 
   render(h, context) {
     const INTENT = ['primary', 'danger', 'success', 'warning']

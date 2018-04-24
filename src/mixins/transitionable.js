@@ -28,9 +28,11 @@ export default {
         {
           props: {
             name,
+            appear: true,
             ...otherProps,
             ...genTransitionClasses(name)
-          }
+          },
+          on: otherProps.on
         },
         [flag ? child : null]
       )

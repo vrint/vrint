@@ -1,132 +1,128 @@
-import VrOverlay from '../overlay/overlay'
-import { safeInvoke, classNames } from '../../util/helper'
+import VrOverlay, { props as OverlayProps } from '../overlay/overlay'
+import { safeInvoke, classNames, safeChildren, extend } from '../../util/helper'
 import * as Classes from '../../util/classes'
 import { Iconable } from '../../mixins'
+
+const props = extend(
+  {
+    /**
+     *
+     */
+    title: String,
+    /**
+     *
+     */
+    isCloseButtonShown: {
+      type: Boolean,
+      default: true
+    },
+
+    bodyClasses: {
+      type: String,
+      default: Classes.DIALOG_BODY
+    },
+    footerClasses: {
+      type: String,
+      default: Classes.DIALOG_FOOTER
+    }
+  },
+  OverlayProps
+)
+
+delete props.contentClasses
+delete props.classes
+delete props.transitionName
+
+export { props }
 
 export default {
   name: 'vr-dialog',
 
+  props,
+
   mixins: [Iconable],
 
-  props: {
-    isOpen: Boolean,
-    isClossButtonShown: {
-      type: Boolean,
-      default: true
-    },
-    canOutsideClickClose: {
-      type: Boolean,
-      default: true
-    },
-    title: String,
-    className: String,
-    onClose: Function,
-    footerClassName: String
+  render(h) {
+    return h(
+      VrOverlay,
+      {
+        props: {
+          canOutsideClickClose: this.canOutsideClickClose,
+          autoFocus: this.autoFocus,
+          enforceFocus: this.enforceFocus,
+          isOpen: this.isOpen,
+          lazy: this.lazy,
+          usePortal: this.usePortal,
+          hasBackdrop: this.hasBackdrop,
+          onClose: this.onClose,
+          classes: Classes.OVERLAY_SCROLL_CONTAINER,
+          contentClasses: Classes.DIALOG_CONTAINER
+        }
+      },
+      safeChildren(this.genWrapper())
+    )
   },
 
   methods: {
-    genContainer(children) {
-      const h = this.$createElement
-      const { onClose, isOpen, canOutsideClickClose } = this
-      return h(
-        VrOverlay,
-        {
-          props: {
-            isOpen,
-            onClose,
-            canOutsideClickClose,
-            classNames: Classes.OVERLAY_SCROLL_CONTAINER,
-            contentClassNames: Classes.DIALOG_CONTAINER
-          }
-        },
-        [h('div', { staticClass: classNames(Classes.DIALOG, this.className) }, children)]
-      )
+    genWrapper() {
+      let option = {}
+      option.staticClass = Classes.DIALOG
+      return this.$createElement('div', option, [
+        this.genHeader(),
+        this.genBody(),
+        this.genFooter()
+      ])
     },
 
-    renderBody(children) {
-      const bodySlot = this.$slots.body
-      if (bodySlot) {
-        return bodySlot
-      } else {
-        const h = this.$createElement
-        return h('div', { class: Classes.DIALOG_BODY }, children)
-      }
+    genHeader() {
+      const { title, isCloseButtonShown, iconName: hasIcon } = this
+      const hasSlotHeader = this.$slots.header
+      const iconSize = 20
+
+      if (!this.title && !hasSlotHeader) return null
+
+      let option = {}
+      option.staticClass = Classes.DIALOG_HEADER
+      return this.$createElement('div', option, [
+        hasIcon ? this.genIcon(this.iconName, iconSize) : null,
+        hasSlotHeader ? this.$slots.header : this.wrapperTitleWithNode(),
+        isCloseButtonShown ? this.genCloseButton() : null
+      ])
     },
 
-    genTitle() {
-      if (!this.title) {
-        return null
-      }
-      const h = this.$createElement
-      return h('h4', { staticClass: Classes.DIALOG_HEADER_TITLE }, this.title)
+    genCloseButton() {
+      const on = { click: this.onClose }
+      const iconName = 'small-cross'
+      const iconSize = 20
+
+      const option = {}
+      option.attrs = {}
+      option.attrs['aria-label'] = 'close'
+      option.on = on
+      option.staticClass = Classes.DIALOG_CLOSE_BUTTON
+      return this.$createElement('button', option, safeChildren(this.genIcon(iconName, iconSize)))
     },
 
-    maybeRenderCloseButton() {
-      const h = this.$createElement
-      if (!this.isClossButtonShown) {
-        return null
-      } else {
-        return h(
-          'button',
-          {
-            staticClass: Classes.DIALOG_CLOSE_BUTTON,
-            on: {
-              click: this.onClose
-            },
-            attrs: {
-              'aria-label': 'Close'
-            }
-          },
-          [this.genIcon('small-cross', 20)]
-        )
-      }
+    genBody() {
+      const hasSlotBody = this.$slots.body
+      const { bodyClasses: staticClass } = this
+      let option = { staticClass }
+      return this.$createElement('div', option, [
+        hasSlotBody ? this.$slots.body : this.$slots.default
+      ])
     },
 
-    maybeRenderHeader() {
-      const { title } = this
-      const h = this.$createElement
-      if (title == null) {
-        return undefined
-      }
-      const icon = this.iconName ? this.genIcon() : null
-      return h(
-        'div',
-        {
-          staticClass: Classes.DIALOG_HEADER
-        },
-        [icon, this.genTitle(), this.maybeRenderCloseButton()]
-      )
+    genFooter() {
+      const hasSlotFooter = this.$slots.footer
+      const { footerClasses: staticClass } = this
+      if (!hasSlotFooter) return null
+
+      let option = { staticClass }
+      return this.$createElement('div', option, this.$slots.footer)
     },
 
-    maybeRenderFooter() {
-      const h = this.$createElement
-      const { footerClassName: staticClass } = this
-      const footerNode = this.$slots.footer
-      if (!footerNode) {
-        return null
-      }
-
-      if (staticClass) {
-        return h('div', { staticClass }, footerNode)
-      } else {
-        const footerAction = h('div', { staticClass: Classes.DIALOG_FOOTER_ACTIONS }, [footerNode])
-        return h('div', { staticClass: Classes.DIALOG_FOOTER }, [footerAction])
-      }
-    },
-
-    handleContainerMouseDown(e) {
-      const isClickOutsideDialog = e.target.closest(`.${Classes.DIALOG}`) == null
-      if (isClickOutsideDialog && this.canOutsideClickClose) {
-        safeInvoke(this.onClose, e)
-      }
+    wrapperTitleWithNode() {
+      return this.$createElement('h4', { staticClass: Classes.DIALOG_HEADER_TITLE }, this.title)
     }
-  },
-
-  render(h) {
-    return this.genContainer([
-      this.maybeRenderHeader(),
-      this.renderBody(this.$slots.default),
-      this.maybeRenderFooter()
-    ])
   }
 }

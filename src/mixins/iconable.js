@@ -7,13 +7,14 @@ export default {
   },
 
   methods: {
-    genIcon(iconName, iconSize) {
+    genIcon(iconName, iconSize, ...options) {
       let data = {
         props: {
           iconName: iconName || this.iconName,
           iconSize: iconSize || this.iconSize,
           intent: this.intent
-        }
+        },
+        ...options
       }
       return this.$createElement(VrIcon, data)
     }
