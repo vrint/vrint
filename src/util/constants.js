@@ -1,1 +1,1 @@
-export const spacer = ' ';
+export const spacer = ' '

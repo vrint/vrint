@@ -12,3 +12,14 @@
     </vr-popover>
   </section>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      isOpen: true
+    }
+  }
+}
+</script>
+

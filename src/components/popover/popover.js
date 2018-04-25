@@ -2,10 +2,17 @@ import Popper from 'popper'
 import Portal from '../portal'
 import VrOverlay from '../overlay'
 import PopoverArrow from './arrow'
-import { classNames } from '../../util/helper'
+import { classNames, safeInvoke, safeChildren } from '../../util/helper'
 import * as Classes from '../../util/classes'
 import { arrowOffsetModifier, getTransformOrigin } from './popperUtils'
 
+export const props = {
+  placement: {
+    type: String,
+    default: 'top'
+  },
+  isOpen: Boolean
+}
 /*
 * <div>
 *   <PopoverReference/>
@@ -19,18 +26,18 @@ import { arrowOffsetModifier, getTransformOrigin } from './popperUtils'
 export default {
   name: 'vr-popover',
 
-  data: () => ({
-    innerState_isOpen: false,
-    popoverContainerElement: undefined,
-    popoverInstance: undefined
-  }),
+  props,
 
-  props: {
-    placement: {
-      type: String,
-      default: 'top'
-    },
-    value: Boolean
+  model: {
+    prop: 'isOpen',
+    event: 'change'
+  },
+
+  data() {
+    return {
+      popoverContainerElement: undefined,
+      popoverInstance: undefined
+    }
   },
 
   methods: {
@@ -71,11 +78,10 @@ export default {
           }
         }
       })
-      window.Popper = Popper
     },
 
     genPopoverContent() {
-      const { onChildrenMount: onPortalChildrenMount, innerState_isOpen: isOpen } = this
+      const { onChildrenMount, value } = this
       const content = this.$createElement(
         'div',
         { staticClass: Classes.POPOVER_CONTENT },
@@ -93,12 +99,12 @@ export default {
         VrOverlay,
         {
           props: {
-            className: Classes.TRANSITION_CONTAINER,
+            contentClasses: Classes.TRANSITION_CONTAINER,
             usePortal: true,
             hasBackdrop: false,
             transition: Classes.POPOVER,
-            onPortalChildrenMount,
-            isOpen
+            onChildrenMount,
+            isOpen: value
           }
         },
         [wrapper]
@@ -119,7 +125,7 @@ export default {
 
   render(h) {
     return this.genPopoverWrapper([
-      this.innerState_isOpen ? this.genPopoverContent() : null,
+      this.isOpen ? this.genPopoverContent() : null,
       this.genPopoverTarget(this.$slots.reference)
     ])
   }

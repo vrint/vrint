@@ -69,7 +69,11 @@ export const props = extend({
    * A callback that is invoked when user interaction causes the overlay to close, such as
    * clicking on the overlay or pressing the `esc` key (if enabled).
    */
-  onClose: Function
+  onClose: Function,
+  /**
+   * A callback that is invoked when children is mounted to document
+   */
+  onChildrenMount: Function
 })
 
 export default {
@@ -89,16 +93,15 @@ export default {
     this.isPropIsOpenInitSet = this.isOpen
   },
 
-  computed: {
-    containerElement() {
-      return this.$refs.containerElement
+  mounted() {
+    if (!this.usePortal) {
+      safeInvoke(this.onChildrenMount, this.containerElement)
     }
   },
 
   render(h) {
-    const { lazy, hasBackdrop, isOpen, usePortal } = this
+    const { lazy, hasBackdrop, isOpen, usePortal, onChildrenMount } = this
     const { isPropIsOpenInitSet } = this
-    const { onPortalChildrenMount: onChildrenMount } = this
     const shouldRenderNothing = lazy && !isPropIsOpenInitSet
 
     if (shouldRenderNothing) {
@@ -138,11 +141,11 @@ export default {
         this.classes
       )
 
-      let options = {}
-      options.staticClass = containerClasses
-      options.ref = 'containerElement'
-      options.on = this.eventOfEscKeyDown()
-      return this.$createElement('div', options, children)
+      let option = {}
+      option.staticClass = containerClasses
+      option.ref = 'containerElement'
+      option.on = this.eventOfEscKeyDown()
+      return this.$createElement('div', option, children)
     },
 
     genContentWithSlot() {

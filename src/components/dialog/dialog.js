@@ -16,7 +16,6 @@ const props = extend(
       type: Boolean,
       default: true
     },
-
     bodyClasses: {
       type: String,
       default: Classes.DIALOG_BODY
@@ -30,7 +29,6 @@ const props = extend(
 )
 
 delete props.contentClasses
-delete props.classes
 delete props.transitionName
 
 export { props }
@@ -66,7 +64,7 @@ export default {
   methods: {
     genWrapper() {
       let option = {}
-      option.staticClass = Classes.DIALOG
+      option.staticClass = classNames(Classes.DIALOG, this.classes)
       return this.$createElement('div', option, [
         this.genHeader(),
         this.genBody(),
@@ -114,11 +112,18 @@ export default {
 
     genFooter() {
       const hasSlotFooter = this.$slots.footer
+      const hasSlotAction = this.$slots.action
       const { footerClasses: staticClass } = this
-      if (!hasSlotFooter) return null
+      if (!hasSlotFooter && !hasSlotAction) return null
 
       let option = { staticClass }
-      return this.$createElement('div', option, this.$slots.footer)
+      let actionOption = {}
+      actionOption.staticClass = Classes.DIALOG_FOOTER_ACTIONS
+
+      let child = hasSlotFooter
+        ? this.$slots.footer
+        : this.$createElement('div', actionOption, this.$slots.action)
+      return this.$createElement('div', option, safeChildren(child))
     },
 
     wrapperTitleWithNode() {

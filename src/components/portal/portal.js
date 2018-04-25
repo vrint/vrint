@@ -11,7 +11,7 @@ export default {
     }
   },
 
-  destroy() {
+  destroyed() {
     const { portalElement } = this.$refs
     portalElement && portalElement.remove()
   },

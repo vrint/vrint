@@ -1,84 +1,73 @@
-import VrDialog from '../dialog'
 import VrButton from '../button'
+import VrDialog, { props as dialogProps } from '../dialog/dialog'
 import * as Classes from '../../util/classes'
-import { safeInvoke, classNames } from '../../util/helper'
-import { Iconable, Escable, Outclickable, Footerable, Intentable } from '../../mixins'
+import { safeInvoke, safeChildren, extend, createTemplateWithName } from '../../util/helper'
+import { Iconable, Intentable } from '../../mixins'
+
+const props = extend(
+  {
+    cancelButtonText: String,
+    confirmButtonText: String,
+    handleConfirm: Function,
+    handleCancel: Function
+  },
+  dialogProps
+)
+
+delete props.title
+delete props.bodyClasses
+delete props.footerClasses
+delete props.canEscapeKeyCancel
+delete props.canOutsideClickCancel
 
 export default {
   name: 'vr-alert',
 
-  mixins: [Iconable, Escable, Outclickable, Footerable, Intentable],
+  props,
 
-  props: {
-    isOpen: Boolean
-  },
+  mixins: [Iconable, Intentable],
 
   methods: {
     genButton(text, clickHandler, intent) {
-      return this.$createElement(VrButton, {
-        props: {
-          text,
-          intent
-        },
-        on: {
-          click: e => {
-            safeInvoke(clickHandler, e)
-          }
-        }
-      })
-    },
-
-    genAlertBody() {
-      const h = this.$createElement
-      const AlertContentClass = { staticClass: Classes.ALERT_CONTENTS }
-      const AlertBodyClass = { staticClass: Classes.ALERT_BODY }
-      const iconNode = this.genIcon(this.iconName, 40)
-      const contentNode = h('div', { ...AlertBodyClass }, [iconNode, this.$slots.default])
-      return h('template', { slot: 'body' }, [contentNode])
-    },
-
-    genAlertFooter() {
-      const h = this.$createElement
-      const customFooter = this.$slots.footer
-      const AlertFooterClass = { staticClass: Classes.ALERT_FOOTER }
-      const { cancelButtonText, confirmButtonText, handleConfirm, handleCancel } = this
-      if (customFooter) {
-        return h('template', { slot: 'footer' }, customFooter)
+      const option = {
+        props: { text, intent },
+        on: { click: safeInvoke.bind(this, clickHandler) }
       }
+      return this.$createElement(VrButton, option)
+    },
 
-      const footerNode = h('div', { ...AlertFooterClass }, [
-        this.genButton(confirmButtonText, handleConfirm, this.intent),
+    genContent() {
+      let option = {}
+      option.staticClass = Classes.ALERT_CONTENTS
+      return this.$createElement('div', option, this.$slots.default)
+    },
+
+    genFooter() {
+      const h = this.$createElement
+      const { cancelButtonText, confirmButtonText, handleConfirm, handleCancel, intent } = this
+      return createTemplateWithName(h, 'footer', [
+        confirmButtonText ? this.genButton(confirmButtonText, handleConfirm, intent) : null,
         cancelButtonText ? this.genButton(cancelButtonText, handleCancel) : null
       ])
-
-      return h('template', { slot: 'footer' }, [footerNode])
     }
   },
 
   render(h) {
-    const {
-      isOpen,
-      intent,
-      canEscapeKeyCancel,
-      canOutsideClickCancel,
-      handleCancel: onClose
-    } = this
-
-    const className = Classes.ALERT
-    const footerClassName = Classes.ALERT_FOOTER
-    return h(
-      VrDialog,
-      {
-        props: {
-          isOpen,
-          onClose,
-          className,
-          footerClassName,
-          canEscapeKeyCancel,
-          canOutsideClickCancel
-        }
-      },
-      [this.genAlertBody(), this.genAlertFooter()]
-    )
+    const option = {
+      props: {
+        isOpen: this.isOpen,
+        onClose: this.onClose,
+        classes: Classes.ALERT,
+        bodyClasses: Classes.ALERT_BODY,
+        footerClasses: Classes.ALERT_FOOTER,
+        canEscapeKeyCancel: true,
+        canOutsideClickCancel: true
+      }
+    }
+    return h(VrDialog, option, [
+      this.genIcon(this.iconName, 40),
+      this.genContent(),
+      this.genFooter()
+    ])
   }
 }
