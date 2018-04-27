@@ -45,7 +45,8 @@ export default {
       VrOverlay,
       {
         props: {
-          canOutsideClickClose: this.canOutsideClickClose,
+          // canOutsideClickClose: this.canOutsideClickClose,
+          canOutsideClickClose: false,
           autoFocus: this.autoFocus,
           enforceFocus: this.enforceFocus,
           isOpen: this.isOpen,

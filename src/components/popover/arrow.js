@@ -25,14 +25,11 @@ export function getArrowAngle(placement) {
 
 export default createFunctionalComponent({
   props: {
-    placement: {
-      type: String,
-      validator: () => true
-    }
+    angle: Number
   },
 
   render(h, context) {
-    const angle = getArrowAngle(context.props.placement)
+    const angle = context.props.angle
     const arrowBorderPath = h('path', {
       staticClass: Classes.POPOVER_ARROW + '-border',
       attrs: { d: SVG_SHADOW_PATH }

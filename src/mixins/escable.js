@@ -13,8 +13,8 @@ export default {
     eventOfEscKeyDown() {
       return {
         keydown: e => {
+          console.log(e)
           const isEsc = e.which === Keys.ESCAPE && this.canEscapeKeyClose
-          console.log(isEsc)
           if (isEsc) {
             safeInvoke(this.onClose, e)
           }

@@ -15,7 +15,7 @@
     <TextareaView/>
     <DropdownView/>
     <TagsView/>
-    <!-- <PopoverView/> -->
+    <PopoverView/>
   </vr-application>
 </template>
 
@@ -53,7 +53,7 @@ export default {
     AlertView,
     TagsView,
     DialogView,
-    // PopoverView,
+    PopoverView,
     Test
   },
   data() {

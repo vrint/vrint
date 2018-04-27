@@ -7,7 +7,7 @@ export default {
 
   model: {
     prop: 'checked',
-    event: 'change'
+    event: 'checkChange'
   },
 
   props: {
@@ -40,8 +40,8 @@ export default {
 
     inputChangeHandler(el) {
       const inputRef = this.$refs.checkbox
-      const checked = inputRef.checked
-      this.$emit('change', checked)
+      const { checked, indeterminate } = inputRef.checked
+      this.$emit('checkChange', checked, indeterminate, el)
     }
   },
 

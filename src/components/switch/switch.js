@@ -5,6 +5,11 @@ import { Activable, Intentable, Sizeable } from '../../mixins'
 export default {
   name: 'vr-switch',
 
+  model: {
+    prop: 'checked',
+    event: 'checkChange'
+  },
+
   props: {
     inline: Boolean,
     checked: Boolean
@@ -34,7 +39,7 @@ export default {
     inputChangeHandler(el) {
       const inputRef = this.$refs.switch
       const checked = inputRef.checked
-      this.$emit('change', { checked, el })
+      this.$emit('checkChange', checked, el)
     }
   },
 

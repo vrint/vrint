@@ -56,12 +56,12 @@ export default {
     const option = {
       props: {
         isOpen: this.isOpen,
-        onClose: this.onClose,
+        onClose: this.handleCancel,
         classes: Classes.ALERT,
         bodyClasses: Classes.ALERT_BODY,
         footerClasses: Classes.ALERT_FOOTER,
         canEscapeKeyCancel: true,
-        canOutsideClickCancel: true
+        canOutsideClickClose: true
       }
     }
     return h(VrDialog, option, [

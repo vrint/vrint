@@ -93,9 +93,19 @@ export default {
     this.isPropIsOpenInitSet = this.isOpen
   },
 
+  watch: {
+    isOpen(val) {
+      if (val && !this.usePortal) {
+        this.$nextTick(e => {
+          safeInvoke(this.onChildrenMount, this.$refs.containerElement)
+        })
+      }
+    }
+  },
+
   mounted() {
-    if (!this.usePortal) {
-      safeInvoke(this.onChildrenMount, this.containerElement)
+    if (this.isOpen && !this.usePortal) {
+      safeInvoke(this.onChildrenMount, this.$refs.containerElement)
     }
   },
 
@@ -167,21 +177,31 @@ export default {
     },
 
     didOpen() {
+      if (this.canOutsideClickClose && !this.hasBackdrop) {
+        document.addEventListener('mousedown', this.handleDocumentClick)
+      }
+
+      // if (this.hasBackdrop) {
+      // add a class to the body to prevent scrolling of content below the overlay
+      // document.body.classList.add(Classes.OVERLAY_OPEN)
+      // }
+
       this.bringFocusInsideOverlay()
       this.$emit('open')
     },
 
     bringFocusInsideOverlay() {
       const { autoFocus } = this
-      if (this.containerElement == null || document.activeElement == null || !this.isOpen) {
+      const containerElement = this.$refs.containerElement
+      if (containerElement == null || document.activeElement == null || !this.isOpen) {
         return
       }
 
-      const isFocusOutsideModal = !this.containerElement.contains(document.activeElement)
+      const isFocusOutsideModal = !containerElement.contains(document.activeElement)
       if (isFocusOutsideModal) {
         // element marked autofocus has higher priority than the other clowns
-        const autofocusElement = this.containerElement.querySelector('[autofocus]')
-        const wrapperElement = this.containerElement.querySelector('[tabindex]')
+        const autofocusElement = containerElement.querySelector('[autofocus]')
+        const wrapperElement = containerElement.querySelector('[tabindex]')
         if (autofocusElement != null) {
           autofocusElement.focus()
         } else if (wrapperElement != null) {
@@ -190,7 +210,22 @@ export default {
       }
     },
 
-    didClose() {},
+    handleDocumentClick(el) {
+      const { isOpen, canOutsideClickClose, onClose } = this
+      const eventTarget = el.target
+      const isClickInThisOverlayOrDescendant = this.$refs.containerElement.contains(eventTarget)
+      if (isOpen && canOutsideClickClose && !isClickInThisOverlayOrDescendant) {
+        // casting to any because this is a native event
+        setTimeout(() => {
+          safeInvoke(onClose, el)
+        }, 100)
+      }
+    },
+
+    didClose() {
+      document.removeEventListener('mousedown', this.handleDocumentClick)
+      this.$emit('close')
+    },
 
     handleBackdropMouseDown(e) {
       const { canOutsideClickClose, enforceFocus, onClose } = this
