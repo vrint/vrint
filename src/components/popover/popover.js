@@ -7,9 +7,14 @@ import { arrowOffsetModifier, getTransformOrigin } from './popperUtils'
 
 export const props = {
   disabled: Boolean,
+  lazy: Boolean,
   placement: {
     type: String,
     default: 'top'
+  },
+  popoverClasses: {
+    type: String,
+    default: 'pt-popover-content-sizing'
   },
   isOpen: Boolean,
   modifiers: {
@@ -19,7 +24,8 @@ export const props = {
   isArrowEnabled: {
     type: Boolean,
     default: true
-  }
+  },
+  usePortal: Boolean
 }
 /*
 * <div>
@@ -75,17 +81,21 @@ export default {
       let overlayOption = {}
       overlayOption.props = {
         contentClasses: Classes.TRANSITION_CONTAINER,
-        usePortal: false,
+        usePortal: this.usePortal,
         hasBackdrop: false,
         onChildrenMount: this.onChildrenMount,
         transitionName: Classes.POPOVER,
         isOpen: this.isOpen,
+        lazy: this.lazy,
         onClose: this.onClose
       }
 
       let option = {}
-      option.staticClass = classNames(Classes.POPOVER, 'pt-popover-content-sizing')
-      console.log(this.transformOrigin)
+      option.staticClass = classNames(
+        Classes.POPOVER,
+        this.popoverClasses
+      )
+      // console.log(this.transformOrigin)
       // option.style = this.transformOrigin
       const content = this.$createElement('div', option, [
         this.isArrowEnabled ? this.genTagetArrow() : null,
@@ -108,7 +118,9 @@ export default {
       }
 
       children.forEach(vnode => {
+        if (!vnode.componentInstance) return
         vnode.data.staticClass = this.isOpen ? Classes.ACTIVE : null
+        vnode.data.attrs = vnode.data.attrs || {}
         vnode.data.attrs['aria-popover'] = String(!this.disabled)
         vnode.componentOptions.propsData.disabled = this.disabled
       })

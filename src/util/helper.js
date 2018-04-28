@@ -62,7 +62,7 @@ export function safeChildren(...args) {
 
 // createTemplateWithName(h, 'body', [])
 export function createTemplateWithName(h, slot, children) {
-  return h('template', { slot }, children)
+  return h('template', { slot }, safeChildren(children))
 }
 
 export function createFunctionalComponent(option) {

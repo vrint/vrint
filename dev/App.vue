@@ -16,6 +16,7 @@
     <DropdownView/>
     <TagsView/>
     <PopoverView/>
+    <TooltipView/>
   </vr-application>
 </template>
 
@@ -35,6 +36,7 @@ import AlertView from './components/alert-view'
 import TagsView from './components/tags-view'
 import PopoverView from './components/popover-view'
 import DialogView from './components/dialog-view'
+import TooltipView from './components/tooltip-view'
 import Test from './test'
 
 export default {
@@ -54,6 +56,7 @@ export default {
     TagsView,
     DialogView,
     PopoverView,
+    TooltipView,
     Test
   },
   data() {

@@ -85,6 +85,7 @@ export default {
 
   data() {
     return {
+      hasPortalChildrenMounted: false,
       isPropIsOpenInitSet: false
     }
   },
@@ -100,6 +101,12 @@ export default {
           safeInvoke(this.onChildrenMount, this.$refs.containerElement)
         })
       }
+
+      if (val && this.usePortal && this.hasPortalChildrenMounted) {
+        this.$nextTick(e => {
+          safeInvoke(this.onChildrenMount, this.$refs.containerElement)
+        })
+      }
     }
   },
 
@@ -107,14 +114,19 @@ export default {
     if (this.isOpen && !this.usePortal) {
       safeInvoke(this.onChildrenMount, this.$refs.containerElement)
     }
+
+    if (this.isOpen && this.usePortal && this.hasPortalChildrenMounted) {
+      safeInvoke(this.onChildrenMount, this.$refs.containerElement)
+    }
   },
 
   render(h) {
-    const { lazy, hasBackdrop, isOpen, usePortal, onChildrenMount } = this
+    const { lazy, hasBackdrop, isOpen, usePortal } = this
     const { isPropIsOpenInitSet } = this
+    const { onPortalChildrenMount: onChildrenMount } = this
     const shouldRenderNothing = lazy && !isPropIsOpenInitSet
 
-    if (shouldRenderNothing) {
+    if (shouldRenderNothing && !isOpen) {
       return null
     }
 
@@ -249,6 +261,11 @@ export default {
       return this.$createElement('div', option)
     },
 
-    onPortalChildrenMount() {}
+    onPortalChildrenMount() {
+      this.hasPortalChildrenMounted = true
+      if (this.lazy) {
+        safeInvoke(this.onChildrenMount, this.$refs.containerElement)
+      }
+    }
   }
 }
