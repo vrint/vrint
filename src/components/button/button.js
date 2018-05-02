@@ -40,17 +40,11 @@ export default {
       }
     }
 
-    let children = []
-    if (this.loading) {
-      children.push(this.genLoader({ type: 'button', size: 'small' }))
-    }
-
-    if (this.iconName) {
-      children.push(this.genIcon())
-    }
-
     let text = this.text ? this.text : this.$slots.default
-    children.push(h('span', { staticClass: Classes.BUTTON_TEXT }, text))
-    return h('button', data, children)
+    return h('button', data, [
+      this.loading ? this.genLoader({ type: 'button', size: 'small' }) : null,
+      this.iconName ? this.genIcon() : null,
+      text ? h('span', { staticClass: Classes.BUTTON_TEXT }, text) : null
+    ])
   }
 }

@@ -1,25 +1,14 @@
-import sizeable from '../../mixins/sizeable'
+import { Sizeable, Intentable } from '../../mixins'
+import { classNames } from '../../util/helper'
+import * as Classes from '../../util/classes'
 
 export default {
   name: 'vr-button-group',
 
-  mixins: [sizeable],
-
-  computed: {
-    classes() {
-      return Object.assign(
-        {
-          'pt-button-group': true
-        },
-        this.sizeClass
-      )
-    }
-  },
+  mixins: [Sizeable, Intentable],
 
   render(h) {
-    let data = {
-      class: this.classes
-    }
-    return h('div', data, [this.$slots.default])
+    const staticClass = classNames(Classes.BUTTON_GROUP, this.sizeClass, this.intentClass)
+    return h('div', { staticClass }, this.$slots.default)
   }
 }

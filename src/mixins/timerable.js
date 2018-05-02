@@ -5,12 +5,13 @@
  */
 
 export default {
+  data() {
+    return {
+      timeoutIds: []
+    }
+  },
+
   methods: {
-    data() {
-      return {
-        timeoutIds: []
-      }
-    },
     /**
      * Set a timeout and remember its ID.
      * All stored timeouts will be cleared when component unmounts.

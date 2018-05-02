@@ -23,8 +23,9 @@ export default {
     createTransition(child, flag, otherProps, name = this.transitionNamem) {
       const h = this.$createElement
       const { genTransitionClasses } = this
+      const tag = otherProps.isGroup ? 'transition-group' : 'transition'
       return h(
-        'transition',
+        tag,
         {
           props: {
             name,

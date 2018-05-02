@@ -134,7 +134,7 @@ export default {
     const leave = this.didClose
     const on = { enter, leave }
     let children = safeChildren(
-      this.createTransition(this.genContentWithSlot(), isOpen, { duration: 300, on })
+      this.createTransition(this.genContentWithSlot(), isOpen, { duration: 300, on, isGroup: true })
     )
 
     const shouldRenderBackdrop = isOpen && hasBackdrop
@@ -175,18 +175,15 @@ export default {
       const { contentClasses } = this
 
       let defaultSlot = this.$slots.default || []
-      defaultSlot = defaultSlot.map(this.addPointerEventToAll)
-
-      const option = {}
-      option.staticClass = classNames(contentClasses, OVERLAY_CONTENT)
-      option.attrs = { tabindex: 0 }
-      option.style = { 'pointer-events': 'none' }
-      return this.$createElement('div', option, defaultSlot)
+      return defaultSlot.map(this.addPointerEventToAll)
     },
 
     addPointerEventToAll(vnode) {
       vnode.data.style = {}
+      vnode.data.attr = {}
+      vnode.data.staticClass = 'OVERLAY_CONTENT'
       vnode.data.style['pointer-events'] = 'all'
+      vnode.data.attr['tabindex'] = 0
       return vnode
     },
 

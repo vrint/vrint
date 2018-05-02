@@ -1,8 +1,7 @@
 import * as components from './components'
 import * as directives from './directives'
-import { watch } from 'fs';
 
-function Vrint (Vue, args) {
+function Vrint(Vue, args) {
   const Vrint = components.Vrint
 
   Vue.use(Vrint, {

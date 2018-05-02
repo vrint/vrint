@@ -17,6 +17,7 @@
     <TagsView/>
     <PopoverView/>
     <TooltipView/>
+    <ToasterView/>
   </vr-application>
 </template>
 
@@ -37,6 +38,7 @@ import TagsView from './components/tags-view'
 import PopoverView from './components/popover-view'
 import DialogView from './components/dialog-view'
 import TooltipView from './components/tooltip-view'
+import ToasterView from './components/toaster-view'
 import Test from './test'
 
 export default {
@@ -57,7 +59,7 @@ export default {
     DialogView,
     PopoverView,
     TooltipView,
-    Test
+    ToasterView
   },
   data() {
     return {
