@@ -3,6 +3,8 @@ import { Escable, Transitionable } from '../../mixins'
 import { safeInvoke, classNames, safeChildren, extend } from '../../util/helper'
 import * as Classes from '../../util/classes'
 
+let openStack = []
+
 export const props = extend({
   /**
    * Whether can invoke onClose action by clicking the backdrop element
@@ -170,19 +172,23 @@ export default {
       return this.$createElement('div', option, children)
     },
 
+    /**
+     * <vr-overlay>
+     *  <div class="pt-dialog pt-overlay-content">
+     * </vr-overlay>
+     */
     genContentWithSlot() {
       const { OVERLAY_CONTENT } = Classes
       const { contentClasses } = this
 
-      let defaultSlot = this.$slots.default || []
-      return defaultSlot.map(this.addPointerEventToAll)
+      let children = this.$slots.default || []
+      return children.map(this.renderChild)
     },
 
-    addPointerEventToAll(vnode) {
+    renderChild(vnode) {
       vnode.data.style = {}
       vnode.data.attr = {}
-      vnode.data.staticClass = 'OVERLAY_CONTENT'
-      vnode.data.style['pointer-events'] = 'all'
+      vnode.data.staticClass = Classes.OVERLAY_CONTENT
       vnode.data.attr['tabindex'] = 0
       return vnode
     },
