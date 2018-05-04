@@ -12,9 +12,10 @@ export const props = extend({
 export default {
   name: 'vr-tab',
 
+  props,
+
   render(h) {
-    const staticClass = Classes.TAB_PANEL
     const attrs = { role: 'tablist' }
-    return h('div', { staticClass, attrs }, this.$slots.default)
+    return h('div', { attrs }, this.$slots.default)
   }
 }

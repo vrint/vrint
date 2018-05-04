@@ -1,5 +1,6 @@
 <template>
-  <vr-application :accessable="false">
+  <vr-application :accessable="true" ref="app">
+    <TabsView/>
     <ButtonView/>
     <CheckboxView/>
     <RadioView/>
@@ -22,6 +23,7 @@
 </template>
 
 <script>
+import TabsView from './components/tabs-view'
 import ButtonView from './components/button-view'
 import CheckboxView from './components/checkbox-view'
 import RadioView from './components/radio-view'
@@ -59,13 +61,19 @@ export default {
     DialogView,
     PopoverView,
     TooltipView,
-    ToasterView
+    ToasterView,
+    TabsView
   },
   data() {
     return {
       show: false,
       isOpen: false
     }
+  },
+  mounted() {
+    const children = this.$refs.app.$children
+    const components = children.map(child => child._name)
+    console.log(components)
   },
   methods: {
     toggle() {
